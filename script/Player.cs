@@ -17,6 +17,7 @@ public partial class Player : CharacterBody2D
         _animation = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animation.Play("default");
         _animation.AnimationFinished += AnimationFinished; // utolso frame MEGJELENITESE UTAN ide kuld jelet hogy vege ezaltal lefut az animationfinished
+        AddToGroup("player");    
     }
 
 

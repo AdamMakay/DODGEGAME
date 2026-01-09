@@ -9,14 +9,22 @@ public partial class Game : Node2D
 	public Vector2 _CameraPos;
 	public Vector2 ViewSize;
 	private PackedScene _arrowScene;
-
+	//private Timer ArrowSpawn;
+	//private Timer Acceleration;
+	private double cooldown = 10.0;       // Másodpercenként lő alapból
+    private double acceleration = 60;   // 5 másodpercenként gyorsul
+    private double spawnInterval = 10.0;
+ 
     public override void _Ready()
 	{
+		//ArrowSpawn = GetNode<Timer>("ArrowSpawn");
+		//Acceleration = GetNode<Timer>("Acceleration");
+
 		_Camera = GetNode<Camera2D>("Camera2D");
         ViewSize = GetViewport().GetVisibleRect().Size / 2;
 		_CameraPos = _Camera.GlobalPosition;
         _arrowScene = GD.Load<PackedScene>(ArrowPath);
-        
+
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,6 +34,26 @@ public partial class Game : Node2D
             _ArrowSpawn();
 		
     }
+
+	public override void _PhysicsProcess(double delta)
+	{
+
+		cooldown -= delta;
+		acceleration -= delta;
+		if(acceleration <= 0) 
+		{
+		spawnInterval =- 0.2;
+		if(spawnInterval<=0.3) spawnInterval = 0.3;
+		acceleration = 5.0;
+		GD.Print($"Gyorsulás! Új köz: {spawnInterval}");
+		}
+		if(cooldown<=0)
+		{
+			_ArrowSpawn();
+			cooldown = spawnInterval;
+		}
+		
+	}
 
 
     public void _ArrowSpawn()
@@ -41,9 +69,16 @@ public partial class Game : Node2D
 			_ => _CameraPos + new Vector2(0, +ViewSize.Y)
 		};
         AddChild(ArrowSpawn);
+		
         // irany kiszamitasa
         
         
         GD.Print($"Spawned arrow at {ArrowSpawn.GlobalPosition} side {side}");
     }
+	public void timer()
+	{
+		GD.Print("vege");
+		
+	}
+	
 }
