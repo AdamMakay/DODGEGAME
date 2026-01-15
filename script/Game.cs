@@ -14,13 +14,14 @@ public partial class Game : Node2D
 	private double cooldown = 10.0;       // Másodpercenként lő alapból
     private double acceleration = 60;   // 5 másodpercenként gyorsul
     private double spawnInterval = 10.0;
- 
+    private Godot.Label _label;
+    private double time = 0.0;
     public override void _Ready()
 	{
-		//ArrowSpawn = GetNode<Timer>("ArrowSpawn");
-		//Acceleration = GetNode<Timer>("Acceleration");
-
-		_Camera = GetNode<Camera2D>("Camera2D");
+        //ArrowSpawn = GetNode<Timer>("ArrowSpawn");
+        //Acceleration = GetNode<Timer>("Acceleration");
+        _label = GetNode<Godot.Label>("Label");
+        _Camera = GetNode<Camera2D>("Camera2D");
         ViewSize = GetViewport().GetVisibleRect().Size / 2;
 		_CameraPos = _Camera.GlobalPosition;
         _arrowScene = GD.Load<PackedScene>(ArrowPath);
@@ -52,8 +53,9 @@ public partial class Game : Node2D
 			_ArrowSpawn();
 			cooldown = spawnInterval;
 		}
-		
-	}
+		time += delta;
+        _label.Text = time.ToString("F0");
+    }
 
 
     public void _ArrowSpawn()
